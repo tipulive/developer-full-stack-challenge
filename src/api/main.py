@@ -1,10 +1,11 @@
 
 from fastapi import FastAPI,Depends
 from fastapi.middleware.cors import CORSMiddleware
-from apiService.author import router as author_router
-from apiService.book import router as book_router
-from apiService.user import router as user_router
+from api.author import router as author_router
+from api.book import router as book_router
+from api.user import router as user_router
 from dbCreation import create_tables
+from seed_data import seed_data
 
 from dependencies import get_current_active_user
 
@@ -35,6 +36,7 @@ app.include_router(user_router, prefix=f"/{version}/api")
 @app.on_event("startup")
 async def startup_event():
     create_tables()
+    seed_data()
 
 @app.get("/protected")
 async def protected_route(current_user: str = Depends(get_current_active_user)):

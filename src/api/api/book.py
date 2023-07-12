@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import   Query,APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
+from sqlalchemy import desc,asc
 
 from models.author import Author
 from models.book import Book
@@ -13,15 +13,16 @@ router = APIRouter()
 
 
 @router.get("/books_paginate")
-def get_books_with_paginate(db: Session = Depends(get_db),page: int = 1, limit: int = 10, search: str = None):
+def get_books_with_paginate(current_user: str = Depends(get_current_active_user),db: Session = Depends(get_db),page: int = 1, limit: int = 10, search: str = None,sort: str = Query("asc", regex=r"^(asc|desc)$")):
        # Pagination logic
     offset = (page - 1) * limit
     
+    queryData=asc(Book.id) if sort=="asc" else desc(Book.id)
     # Query books with author information
     query = (
         db.query(Book, Author.name.label("author_name"))
         .join(Author)
-        .order_by(Book.id)
+        .order_by(queryData)
     )
     
     # Search logic
@@ -39,7 +40,9 @@ def get_books_with_paginate(db: Session = Depends(get_db),page: int = 1, limit: 
             "id": book.id,
             "name": book.name,
             "pages": book.pages,
+            "author_id":book.author_id,
             "author_name": author_name
+            
         })
     
     return {
@@ -47,7 +50,7 @@ def get_books_with_paginate(db: Session = Depends(get_db),page: int = 1, limit: 
         "books": response_books,
     }
 @router.get("/BookByAuthorId")
-def get_books_with_search_author_id(db: Session = Depends(get_db),page: int = 1, limit: int = 10, search: str = None):
+def get_books_with_search_author_id(current_user: str = Depends(get_current_active_user),db: Session = Depends(get_db),page: int = 1, limit: int = 10, search: str = None):
        # Pagination logic
     offset = (page - 1) * limit
     
@@ -81,7 +84,7 @@ def get_books_with_search_author_id(db: Session = Depends(get_db),page: int = 1,
         "books": response_books,
     }
 @router.get("/books")
-def get_books(db: Session = Depends(get_db)):
+def get_books(current_user: str = Depends(get_current_active_user),db: Session = Depends(get_db)):
     books = db.query(Book).all()
     return books
 
@@ -95,7 +98,7 @@ def get_books(current_user: str = Depends(get_current_active_user),db: Session =
 
 
 @router.post("/books")
-def create_book(book: BookCreate, db: Session = Depends(get_db)):
+def create_book(book: BookCreate,current_user: str = Depends(get_current_active_user), db: Session = Depends(get_db)):
     new_book = Book(name=book.name, author_id=book.author_id, pages=book.pages)
     db.add(new_book)
     db.commit()
@@ -103,7 +106,7 @@ def create_book(book: BookCreate, db: Session = Depends(get_db)):
     return new_book
 
 @router.put("/books/{book_id}")
-def update_book(book_id: int, book:BookUpdate, db: Session = Depends(get_db)):
+def update_book(book_id: int, book:BookUpdate,current_user: str = Depends(get_current_active_user),db: Session = Depends(get_db)):
     # Check if the book exists
     db_book = db.query(Book).filter(Book.id == book_id).first()
     if not db_book:
@@ -120,7 +123,7 @@ def update_book(book_id: int, book:BookUpdate, db: Session = Depends(get_db)):
     return db_book
 
 @router.delete("/books/{book_id}")
-def delete_book(book_id: int, db: Session = Depends(get_db)):
+def delete_book(book_id: int,current_user: str = Depends(get_current_active_user), db: Session = Depends(get_db)):
     db_book = db.query(Book).filter(Book.id == book_id).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
