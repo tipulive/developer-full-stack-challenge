@@ -1,13 +1,16 @@
 <template>
   <div>
-    <b-form @submit="submitForm">
-      <b-form-group label="Username" label-for="username">
+   <b-form   @submit.prevent="submitForm">
+<b-form-group label="Username" label-for="username">
         <b-form-input id="username" v-model="formData.username" required></b-form-input>
       </b-form-group>
       <b-form-group label="Password" label-for="password">
         <b-form-input id="password" type="password" v-model="formData.password" required></b-form-input>
       </b-form-group>
-      <b-button type="submit" variant="primary">Login</b-button>
+
+<div class="form-group">
+<button class="btn btn-primary">Login</button>
+</div>
     </b-form>
     <shared-loading-spinner v-if="loading"></shared-loading-spinner>
     <shared-error-message v-if="error" :message="error"></shared-error-message>
@@ -34,31 +37,20 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       this.loading = true;
       this.error = null;
+      const payload =this.formData;
+await this.$store.dispatch('user/LoginUser',payload)
 
-      // Perform the login action
-      // Send the formData.username and formData.password to the backend to authenticate the user
-      // Handle the JWT token received from the backend and store it in localStorage or any other storage mechanism
-      // Handle any errors that occur during the login process
+//console.log(await this.$store.dispatch('user/LoginUser',payload))
 
-      // Simulating a delay to demonstrate the loading spinner
-      setTimeout(() => {
-        // Replace the code within this setTimeout with the actual login logic
-        const loginSuccessful = true; // Replace with the actual login response from the backend
+localStorage.setItem(process.env.TOKEN_KEY,this.$store.state.user.UserData.access_token);
+const payloadData=true;
+this.$store.commit('user/update_login',payloadData);
+this.$router.push('/authors');
 
-        if (loginSuccessful) {
-          const jwtToken = '...'; // Replace with the actual JWT token received from the backend
-          localStorage.setItem('jwtToken', jwtToken);
-          // Redirect to the desired page after successful login
-          this.$router.push({ name: 'dashboard' });
-        } else {
-          this.error = 'Invalid username or password. Please try again.';
-        }
 
-        this.loading = false;
-      }, 1500);
     }
   }
 };

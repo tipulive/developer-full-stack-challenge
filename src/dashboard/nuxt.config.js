@@ -1,4 +1,5 @@
 // nuxt.config.js
+ // Update the path to your store configuration file
 
 
 export default {
@@ -35,7 +36,10 @@ export default {
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
        // { src: '~/plugins/vue-treeselect', ssr: false }
-    ],
+       //'@/store/index.js',
+       '~/plugins/dotenv.js'
+  ],
+
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -44,6 +48,7 @@ export default {
     buildModules: [
         // https://go.nuxtjs.dev/typescript
         '@nuxt/typescript-build',
+        '@nuxtjs/dotenv'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules

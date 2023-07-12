@@ -2,17 +2,18 @@
   <div>
 
     <b-modal
-    size="lg"
-      id="authors-modal"
-      title="Manage Author"
+      id="authorAdd-modal"
+      title="Add Author"
+      size="lg"
       hide-footer
-
-    >
+    > <b-form   @submit.prevent="submit">
       <b-form-group label="Name" label-for="author-name">
-        <b-form-input id="author-name"  required></b-form-input>
+        <b-form-input id="author-name" v-model="author.name"  required></b-form-input>
       </b-form-group>
-
-
+<div class="form-group">
+<button class="btn btn-primary">Submit</button>
+</div>
+</b-form>
       <b-form-group label="Books">
         <BooksTable/>
 
@@ -34,10 +35,14 @@ export default {
 
     BooksTable
   },
+    props: {
+
+
+  },
 
   data() {
     return {
-
+author:{},
      bookFields: [
         { key: 'name', label: 'Book Name' },
         { key: 'pages', label: 'Number of Pages' },
@@ -58,13 +63,28 @@ export default {
         //this.modalOpen=false;
       // Handle any logic when the modal is hidden
     },
-    cancel() {
-        console.log(this.author.books[0].author_name)
-      // Handle the logic to cancel the changes and close the modal
-    },
-    save() {
-      // Handle the logic to save the changes and close the modal
-    }
+     async submit(){
+
+         const payload = {
+       name:this.author.name,
+      };
+
+await this.$store.dispatch('author/addAuthors',payload)
+   const payloadData = {
+                    page:1,
+                    limit:10,
+                    search:"",
+                    sort:"desc"
+                  };
+
+this.$bvModal.hide('authorAdd-modal');
+           // await this.$store.dispatch('author/fetchAuthors',payloadData)
+
+
+
+
+      },
+
   }
 };
 </script>

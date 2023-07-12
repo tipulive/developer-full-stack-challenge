@@ -7,12 +7,17 @@
 <script>
 export default {
   methods: {
-    logout() {
+    async logout() {
       // Perform the logout action
-      // Clear the JWT token from localStorage or any other storage mechanism
-      localStorage.removeItem('jwtToken');
+
+            const payloadData ="logout";
+await this.$store.dispatch('user/Logout',payloadData)
+      const payload=false;
+    this.$store.commit('user/update_login', payload);//hide some link
+
+
       // Redirect to the login page or any other desired page
-      this.$router.push({ name: 'login' });
+      this.$router.push({ name:'login' });
     }
   }
 };

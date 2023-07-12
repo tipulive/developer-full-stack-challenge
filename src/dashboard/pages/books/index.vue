@@ -1,47 +1,24 @@
 <template>
   <div>
-    <h1>Login</h1>
-    <AuthorsTable :authors="myArray"/>
+
+    <BooksTable :authors="myArray"/>
   </div>
 </template>
 
 <script>
-import AuthorsTable from '@/components/Books/BooksTable.vue';
+import BooksTable from '@/components/Books/BooksTable.vue';
 
 export default {
-    middleware: 'auth',
+middleware: 'auth',
   components: {
-    AuthorsTable
+    BooksTable
   },
   data() {
     return {
       myArray: [
         { name: "Item 1",books:"test"},
         { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 1",books:"test"},
-        { name: "Item 10",books:"test"},
-        { name: "Item 11",books:"test"},
-        { name: "Item 12",books:"test"},
-        { name: "Item 13",books:"test"},
-        { name: "Item 14",books:"test"},
-        { name: "Item 10",books:"test"},
-        { name: "Item 10",books:"test"},
-        { name: "Item 10",books:"test"},
-        { name: "Item 10",books:"test"},
+
 
       ]
     };

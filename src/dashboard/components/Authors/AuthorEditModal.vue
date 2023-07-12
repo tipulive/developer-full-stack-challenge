@@ -2,19 +2,23 @@
   <div>
 
     <b-modal
-    size="lg"
-      id="authors-modal"
-      title="Manage Author"
+      id="authorEdit-modal"
+      title="Edit Author"
+      size="lg"
       hide-footer
 
     >
+    <b-form   @submit.prevent="submit">
       <b-form-group label="Name" label-for="author-name">
-        <b-form-input id="author-name"  required></b-form-input>
+        <b-form-input id="author-name" :value="AuthorPass.name" required></b-form-input>
       </b-form-group>
-
+      <div class="form-group">
+<button class="btn btn-primary">Save</button>
+</div>
+  </b-form>
 
       <b-form-group label="Books">
-        <BooksTable/>
+        <BooksTable  />
 
       </b-form-group>
 
@@ -34,20 +38,25 @@ export default {
 
     BooksTable
   },
+  props: {
+
+  },
 
   data() {
     return {
+author:{},
 
-     bookFields: [
-        { key: 'name', label: 'Book Name' },
-        { key: 'pages', label: 'Number of Pages' },
-     ],
 
 
 
     };
   },
+ computed: {
+    AuthorPass() {
 
+      return this.$store.state.author.AuthorPass;
+    }
+  },
   methods: {
     modalShown() {
       // Handle any logic when the modal is shown
@@ -58,13 +67,18 @@ export default {
         //this.modalOpen=false;
       // Handle any logic when the modal is hidden
     },
-    cancel() {
-        console.log(this.author.books[0].author_name)
-      // Handle the logic to cancel the changes and close the modal
-    },
-    save() {
-      // Handle the logic to save the changes and close the modal
-    }
+    async submit(){
+console.log(this.$store.state.author.AuthorPass)
+const AuthorName = document.querySelector('#author-name').value;
+         const payload = {
+        id:this.AuthorPass.id,
+        name:AuthorName,
+
+      };
+await this.$store.dispatch('author/editAuthor',payload)
+
+  this.$bvModal.hide('authorEdit-modal');
+      },
   }
 };
 </script>

@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h1>Login</h1>
-    <AuthorsTable :authors="myArray"/>
+
+
+ <AuthorsTable :authors="myArray"/>
+
   </div>
 </template>
 
@@ -9,9 +11,17 @@
 import AuthorsTable from '@/components/Authors/AuthorsTable.vue';
 
 export default {
-     middleware: 'auth',
+middleware: 'auth',
   components: {
     AuthorsTable
+  },
+ computed: {
+    counter() {
+      return this.$store.state.counter;
+    },
+    authorData(){
+        return this.$store.state.author.authorData;
+    }
   },
   data() {
     return {
@@ -22,12 +32,14 @@ export default {
       ]
     };
   },
+
   methods: {
     handleLogin(credentials) {
       // Implement the login logic here
       console.log('Login:', credentials);
 
-    }
+    },
+
   }
 };
 </script>
