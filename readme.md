@@ -1,2 +1,1 @@
-# Sorry for the inconvenience caused on this Git repository. I accidentally deleted some important folders and files. I will fix it and update it today to resolve the errors.
-
+# Fixed but readMe file is not complete about how to install it and run it 
